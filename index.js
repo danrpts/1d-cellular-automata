@@ -9,7 +9,7 @@ var argv = parseArgs(process.argv.slice(2), {
 // rule fxn needs curry
 var rule = require('./rule.js');
 
-// curry in rule value
+// curry in rule #
 rule = _.partial(rule, argv.r);
 
 // info-time simulator

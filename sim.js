@@ -32,7 +32,14 @@ module.exports = function sim (t, s, r) {
   
   gen.fill(t);
   
+  // left seed
+  //gen[0] = s;
+
+  // center seed
   gen[Math.floor(n / 2)] = s;
+  
+  // right seed
+  //gen[n-1] = s;
 
   var j = 0;
 
