@@ -1,9 +1,9 @@
 
-// n is val 1-256 (curry in)
-// c is self value
-// i is self index
-// a is list
-
+// public rule fxn
+// n is rule # 1-256 (curry in)
+// c is cell value (self)
+// i is cell index (self)
+// a is automaton (array)
 module.exports = function (n, c, i, a) {
 
   var h = a.length;
