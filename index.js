@@ -1,9 +1,13 @@
+
 var _ = require('underscore');
+
 var parseArgs = require('minimist');
 
 // parse args and default
 var argv = parseArgs(process.argv.slice(2), {
+  
   r: 90
+
 });
 
 // rule fxn needs curry
