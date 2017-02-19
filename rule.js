@@ -20,10 +20,10 @@ module.exports = function (n, c, i, a) {
   // convert to binary string
   var b = n.toString(2);
 
-  // implicit % 256 for n greater than 256
+  // implicit mod 256 for n greater than 256
   if (b.length > 8) b = b.substr(b.length - 8);
 
-  // pad front w/ 0s
+  // pad high order bits w/ 0s when neccessary
   while (b.length < 8) b = '0' + b;
 
   // map pattern onto n
