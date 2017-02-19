@@ -1,8 +1,7 @@
-
 var _ = require('underscore');
-
 var ctx = require('axel');
 
+// util to color block
 function color (j, v, i) {
   
   if (v) {
@@ -17,10 +16,13 @@ function color (j, v, i) {
 
 }
 
+// public info-time simulator
 // t is initial state
-// s is seed state
-// r is fxn between gens
+// s is seed state a.k.a. singularity
+// r is curried rule fxn
 module.exports = function sim (t, s, r) {
+
+  // init info-time cross-section
 
   var n = ctx.cols;
 
@@ -34,7 +36,7 @@ module.exports = function sim (t, s, r) {
 
   var j = 0;
 
-  // start infinite clock mod m
+  // start inf clock mod m
   setInterval(function () {
 
     if (j < 1) ctx.clear();
@@ -43,8 +45,10 @@ module.exports = function sim (t, s, r) {
     ctx.text(2,1,"t % " + m + " = " + j);
     ctx.cursor.restore();
 
+    // map color over cells
     _.each(gen, _.partial(color, j + 1));
 
+    // next gen
     gen = gen.map(r);
 
     // inc
@@ -53,7 +57,7 @@ module.exports = function sim (t, s, r) {
     // mod
     j %= m;
 
-  }, 10);
+  }, 100);
 
   ctx.cursor.restore();
   

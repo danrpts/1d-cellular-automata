@@ -1,4 +1,3 @@
-// A cellular automaton is information processed in time by some initial rules and parameters
 
 // n is val 1-256 (curry in)
 // c is self value
