@@ -6,10 +6,13 @@ var ctx = require('axel');
 // util to color block
 function color (j, v, i) {
   
+  // if on a.k.a. 1
   if (v) {
 
-    ctx.bg(0,255,0);
+    // green
+    ctx.bg(0, 255, 0);
     
+    // draw point block
     ctx.point(i, j);
 
     ctx.cursor.restore();
@@ -41,7 +44,7 @@ module.exports = function sim (t, s, r) {
   gen[Math.floor(n / 2)] = s;
   
   // right seed
-  //gen[n-1] = s;
+  //gen[n - 1] = s;
 
   var j = 0;
 
@@ -49,9 +52,16 @@ module.exports = function sim (t, s, r) {
   setInterval(function () {
 
     if (j < 1) ctx.clear();
+
+    // yellow
     ctx.bg(255,255,0);
-    ctx.fg(0,0,0);
+
+    // black
+    ctx.fg(0, 0, 0);
+
+    // draw text block
     ctx.text(2,1,"t % " + m + " = " + j);
+
     ctx.cursor.restore();
 
     // map color over cells
