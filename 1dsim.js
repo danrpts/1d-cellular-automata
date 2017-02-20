@@ -83,9 +83,9 @@ module.exports = function (rn, tn, rb) {
     // seed center cell
     gen[Math.floor(xn / 2)] = 1;
     
-  // use random seed(s)
   } else {
 
+    // use random seed(s)
     gen = gen.map(function () {
       return Math.round(_.random(0, 1));
     });
