@@ -4,4 +4,4 @@ Status | File(s) | Description | Notes
 `closed` | index.js | random seed(s) | support for random seed(s)
 `open` | index.js | format | support variety of graphic formats 
 `open` | index.js | io | support piped io
-`open` | index.js | resolution | support configurable resolution
+`closed` | index.js | resolution | support configurable resolution

@@ -59,21 +59,17 @@ function rule (rn, cv, ci, aa) {
 
 
 // public fxn
-// rn is curried rule fxn
+// rn is rule fxn
 // rb is random seed(s) boolean
-module.exports = function (rn, rb) {
+// cn is cell count
+// tn is gen count (discrete time)
+module.exports = function (rn, cn, tn, rb) {
 
   // curry rule fxn
   var rf = _.partial(rule, rn);
 
-  // cell count
-  var xn = ctx.cols;
-
-  // displayable gen-count (max displayable time)
-  var yn = ctx.rows;
-
   // cell-generation array (info-time cross-section)
-  var gen = new Array(xn);
+  var gen = new Array(cn);
 
   // fill all with 0s
   gen.fill(0);
@@ -81,7 +77,7 @@ module.exports = function (rn, rb) {
   if (! rb) {
 
     // seed center cell
-    gen[Math.floor(xn / 2)] = 1;
+    gen[Math.floor(cn / 2)] = 1;
     
   } else {
 
@@ -100,7 +96,7 @@ module.exports = function (rn, rb) {
 
   ctx.clear();
 
-  while (ti < yn - 1) {
+  while (ti < tn - 1) {
 
     // map color over cells
     _.each(gen, _.partial(color, ti + 1));
@@ -113,6 +109,6 @@ module.exports = function (rn, rb) {
 
   }
 
-  ctx.goto(0, yn);
+  ctx.goto(0, tn);
   
 }
