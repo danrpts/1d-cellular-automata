@@ -5,4 +5,4 @@ A cellular automaton (CA) is an artificial lifeform. As compelling as this sound
 
 
 ## What about Turing completeness?
-Some cellular automata are Turing complete e.g. the elementary CA Rule 110. This means all Turing machines can be simulated (all real-world computational problems) can be solved using cellular automata.
+Some cellular automata are Turing complete e.g. the elementary rule 110. This means all Turing machines can be simulated (all real-world computational problems) can be solved using cellular automata.
