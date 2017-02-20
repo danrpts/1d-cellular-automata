@@ -7,8 +7,7 @@ var argv = parseArgs(process.argv.slice(2), {
 
   t: 0,
 
-  // todo
-  random: false
+  rand: false
 
 });
 
@@ -23,4 +22,4 @@ process.on('SIGINT', function() {
 var sim = require('./1dsim.js');
 
 // run simulator
-sim(argv.r, argv.t);
+sim(argv.r, argv.t, argv.rand);

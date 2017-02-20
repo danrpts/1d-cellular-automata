@@ -59,8 +59,9 @@ function rule (rn, cv, ci, aa) {
 
 // public fxn
 // rn is curried rule fxn
-// tn is ms time scalar
-module.exports = function (rn, tn) {
+// tn is millisec time scalar
+// rb is random seed(s) boolean
+module.exports = function (rn, tn, rb) {
 
   // curry rule fxn
   var rf = _.partial(rule, rn);
@@ -71,14 +72,25 @@ module.exports = function (rn, tn) {
   // displayable gen-count (displayable time)
   var yn = ctx.rows;
 
-  // init info-time cross-section
+  // cell-generation array (info-time cross-section)
   var gen = new Array(xn);
-  
-  // fill with initial state
+
+  // fill all with 0s
   gen.fill(0);
 
-  // set center cell with seed state
-  gen[Math.floor(xn / 2)] = 1;
+  if (! rb) {
+
+    // seed center cell
+    gen[Math.floor(xn / 2)] = 1;
+    
+  // use random seed(s)
+  } else {
+
+    gen = gen.map(function () {
+      return Math.round(_.random(0, 1));
+    });
+
+  }
   
   // time index 0
   var ti = 0;
