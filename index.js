@@ -1,6 +1,3 @@
-
-var _ = require('underscore');
-
 var parseArgs = require('minimist');
 
 // parse args and default
@@ -10,15 +7,6 @@ var argv = parseArgs(process.argv.slice(2), {
 
 });
 
-// rule fxn needs curry
-var rule = require('./rule.js');
-
-// curry in rule #
-rule = _.partial(rule, argv.r);
-
-// info-time simulator
-var sim = require('./sim.js');
-
 // handle exit
 process.on('SIGINT', function() {
 
@@ -26,5 +14,8 @@ process.on('SIGINT', function() {
 
 });
 
+// info-time simulator
+var sim = require('./1dsim.js');
+
 // run simulator
-sim(0, 1, rule);
+sim(argv.r);
