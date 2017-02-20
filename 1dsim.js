@@ -60,9 +60,8 @@ function rule (rn, cv, ci, aa) {
 
 // public fxn
 // rn is curried rule fxn
-// tn is millisec time scalar
 // rb is random seed(s) boolean
-module.exports = function (rn, tn, rb) {
+module.exports = function (rn, rb) {
 
   // curry rule fxn
   var rf = _.partial(rule, rn);
@@ -101,10 +100,10 @@ module.exports = function (rn, tn, rb) {
 
   ctx.clear();
 
-  while (ti < yn-1) {
+  while (ti < yn - 1) {
 
     // map color over cells
-    _.each(gen, _.partial(color, ti+1));
+    _.each(gen, _.partial(color, ti + 1));
 
     // create next gen
     gen = gen.map(rf);
