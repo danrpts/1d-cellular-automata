@@ -3,7 +3,12 @@ var parseArgs = require('minimist');
 // parse args and default
 var argv = parseArgs(process.argv.slice(2), {
   
-  r: 90
+  r: 90,
+
+  t: 0,
+
+  // todo
+  random: false
 
 });
 
@@ -18,4 +23,4 @@ process.on('SIGINT', function() {
 var sim = require('./1dsim.js');
 
 // run simulator
-sim(argv.r);
+sim(argv.r, argv.t);

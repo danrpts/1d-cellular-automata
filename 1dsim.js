@@ -59,7 +59,8 @@ function rule (rn, cv, ci, aa) {
 
 // public fxn
 // rn is curried rule fxn
-module.exports = function (rn) {
+// tn is ms time scalar
+module.exports = function (rn, tn) {
 
   // curry rule fxn
   var rf = _.partial(rule, rn);
@@ -111,7 +112,8 @@ module.exports = function (rn) {
     // mod gen-count
     ti %= yn;
 
-  }, 100);
+  // scale time (default 0)
+  }, 1 * tn);
 
   // reset color
   ctx.cursor.restore();
