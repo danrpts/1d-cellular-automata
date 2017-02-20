@@ -1,3 +1,3 @@
-status | file | description | reason | todo
+status | file | description | notes
 --- | --- | ---
-`open` | sim.js | space-time folding in | "folds in" on itself due to infinite time and finite space (circular array) 
+`open` | sim.js | space-time folding in | "folding in" because infinite time and finite space (circular array) 
