@@ -3,11 +3,11 @@ var parseArgs = require('minimist');
 // parse args and default
 var argv = parseArgs(process.argv.slice(2), {
   
-  r: 90,
-
-  t: 0,
-
-  rand: false
+  default: {
+    r: 30,
+    t: 0,
+    rand: false
+  }
 
 });
 

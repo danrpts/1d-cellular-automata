@@ -17,7 +17,8 @@ function color (yi, cv, xi) {
     // draw point block
     ctx.point(xi, yi);
 
-    ctx.cursor.restore();
+    // reset color
+    ctx.cursor.reset();
 
   }
 
@@ -69,7 +70,7 @@ module.exports = function (rn, tn, rb) {
   // cell count
   var xn = ctx.cols;
 
-  // displayable gen-count (displayable time)
+  // displayable gen-count (max displayable time)
   var yn = ctx.rows;
 
   // cell-generation array (info-time cross-section)
@@ -87,7 +88,10 @@ module.exports = function (rn, tn, rb) {
 
     // use random seed(s)
     gen = gen.map(function () {
-      return Math.round(_.random(0, 1));
+
+      // 0 or 1
+      return Math.round(_.random(1));
+    
     });
 
   }
@@ -95,39 +99,21 @@ module.exports = function (rn, tn, rb) {
   // time index 0
   var ti = 0;
 
-  // start infinite clock mod gen-count
-  setInterval(function () {
+  ctx.clear();
 
-    if (ti < 1) ctx.clear();
-
-    // yellow background
-    ctx.bg(255, 255, 0);
-
-    // black foreground
-    ctx.fg(0, 0, 0);
-
-    // draw text block
-    ctx.text(2, 1, "t % " + yn + " = " + ti);
-
-    // reset color
-    ctx.cursor.restore();
+  while (ti < yn-1) {
 
     // map color over cells
-    _.each(gen, _.partial(color, ti + 1));
+    _.each(gen, _.partial(color, ti+1));
 
     // create next gen
     gen = gen.map(rf);
 
     // inc time
-    ti += 1;
+    ti++;
 
-    // mod gen-count
-    ti %= yn;
+  }
 
-  // scale time (default 0)
-  }, 1 * tn);
-
-  // reset color
-  ctx.cursor.restore();
+  ctx.goto(0, yn);
   
 }
