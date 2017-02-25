@@ -1,6 +1,6 @@
-var fs = require('fs');
-
 var parseArgs = require('minimist');
+
+var simulate = require('./1dsim.js');
 
 // parse args and default
 var argv = parseArgs(process.argv.slice(2), {
@@ -30,23 +30,7 @@ process.on('SIGINT', function() {
 
 });
 
-// expected byte count
-var length = Math.ceil(argv.w / 8) * argv.h;
-
-// TODO if (length > SOME_MAX) exit on error
-
-// TODO handle other errors
-
-var simulate = require('./1dsim.js');
-
-// create new simulation
-simulate(argv.w, argv.h, argv.r, argv.rand, function (buf) {
-
-  log(buf);
-
-});
-
-
+// console logging helper
 function log (buf) {
 
   var vw = new DataView(buf);
@@ -68,5 +52,11 @@ function log (buf) {
 
   console.log(s);
 
-} 
+}
 
+// create new simulation
+simulate(argv.w, argv.h, argv.r, argv.rand, function (buf) {
+
+  log(buf);
+
+});

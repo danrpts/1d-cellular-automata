@@ -1,4 +1,3 @@
-
 var _ = require('underscore');
 
 function seed (n, rand) {
