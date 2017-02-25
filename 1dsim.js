@@ -1,114 +1,168 @@
+
 var _ = require('underscore');
 
-var ctx = require('axel');
+function seed (n, rand) {
 
-// private fxn
-// yi
-// cv
-// xi
-function color (yi, cv, xi) {
-  
-  // if on a.k.a. 1
-  if (cv) {
+  // bytes size
+  var size = Math.ceil(n / 8);
 
-    // green
-    ctx.bg(0, 255, 0);
-    
-    // draw point block
-    ctx.point(xi, yi);
+  // generation buffer (only use n bits)
+  var buf = new ArrayBuffer(size);
 
-    // reset color
-    ctx.cursor.reset();
+  // generation buffer view
+  var vw = new DataView(buf);
 
-  }
+  // center w/ respect to n (is this necessary?)
+  if (!rand) {
 
-}
+    // center bit index
+    var i = Math.floor((n - 1) / 2);
 
-// private fxn
-// rn is rule # 1-256 (curried in)
-// cv is cell value
-// ci is cell index
-// aa is whole automaton array
-function rule (rn, cv, ci, aa) {
+    // index relative to its byte
+    var r = i % 8;
 
-  // cells count
-  var hn = aa.length;
+    // center byte offset
+    var o = Math.floor(i / 8);
 
-  // left cell idx
-  var li = (ci - 1 < 0) ? hn - 1 : ci - 1;
+    // if even then double seed else single
+    var s = (n % 2 === 0) ? 192 : 128;
 
-  // right cell idx
-  var ri = (ci + 1) % hn;
+    // shift in the seed
+    vw.setUint8(o, s >>> r);
 
-  // interpret neighborhood pattern as decimal
-  var d = 4 * aa[li] + 2 * cv + 1 * aa[ri];
-
-  // convert decimal rule # to binary string
-  var bs = rn.toString(2);
-
-  // mod 256 for rule # greater than 256
-  if (bs.length > 8) bs = bs.substr(bs.length - 8);
-
-  // pad high order bits of binary rule # w/ 0s if neccessary
-  while (bs.length < 8) bs = '0' + bs;
-
-  // map neighborhood pattern onto binary rule #
-  return parseInt(bs[7 - d], 2);
-
-}
-
-
-// public fxn
-// rn is rule fxn
-// rb is random seed(s) boolean
-// cn is cell count
-// tn is gen count (discrete time)
-module.exports = function (rn, cn, tn, rb) {
-
-  // curry rule fxn
-  var rf = _.partial(rule, rn);
-
-  // cell-generation array (info-time cross-section)
-  var gen = new Array(cn);
-
-  // fill all with 0s
-  gen.fill(0);
-
-  if (! rb) {
-
-    // seed center cell
-    gen[Math.floor(cn / 2)] = 1;
-    
+  // use random seed(s)
   } else {
 
-    // use random seed(s)
-    gen = gen.map(function () {
+    // for each byte
+    for (var o = 0; o < size; o++) {
 
-      // 0 or 1
-      return Math.round(_.random(1));
-    
-    });
+      // set random 8-bits
+      vw.setUint8(o, _.random(0, 255));
+
+    }
 
   }
   
-  // time index 0
-  var ti = 0;
+  return buf;
 
-  ctx.clear();
+}
 
-  while (ti < tn - 1) {
+function next_gen (seed, n, r) {
 
-    // map color over cells
-    _.each(gen, _.partial(color, ti + 1));
+  // bytes size
+  var size = Math.ceil(n / 8);
 
-    // create next gen
-    gen = gen.map(rf);
+  // next generation buffer
+  var buf = new ArrayBuffer(size);
 
-    // inc time
-    ti++;
+  // next generation buffer view
+  var vw = new DataView(buf);
+
+  // seed buffer view
+  var svw = new DataView(seed);
+
+  // next generation byte buffer
+  var byte_buf = 0;
+
+  // TODO stream generation to stdout here
+  for (var sbi = 0; sbi < n; sbi++) {
+
+    // relative "self bit" index 
+    var rsbi = sbi % 8;
+
+    // byte offset
+    var sbo = Math.floor(sbi / 8);
+    var lbo = sbo; // case: left bit is in this byte
+    var rbo = sbo; // case: right bit is in this byte
+
+    // bit index
+    var lbi = sbi - 1;
+    var rbi = sbi + 1;
+
+    // case: left bit is in very last byte (at some index)
+    if (sbi === 0) {
+      lbo = size - 1;
+      lbi = n - 1;
+    }
+
+    // case: left bit is in previous byte (as lsb index 7)
+    else if (rsbi === 0) {
+      lbo = sbo - 1;
+      lbi = 7;
+    }
+
+    // case: right bit is in very first byte (at 0 index)
+    if (sbi === n - 1) {
+      rbo = 0;
+      rbi = 0;
+    }
+
+    // case: right bit is in the next byte (as msb index 0)
+    else if (rsbi === 7) {
+      rbo = sbo + 1;
+      rbi = 0;
+    }
+
+    // left, center, and right bits
+    var lb = svw.getUint8(lbo);
+    var sb = svw.getUint8(sbo);
+    var rb = svw.getUint8(rbo);
+
+    // shift bit to lsb of byte
+    lb >>>= 7 - lbi % 8;
+    sb >>>= 7 - rsbi;
+    rb >>>= 7 - rbi % 8;
+
+    // pull bit out
+    lb &= 1;
+    sb &= 1;
+    rb &= 1;
+
+    // interpret pattern as decimal
+    var d = 4 * lb + 2 * sb + 1 * rb;
+
+    // convert decimal rule to binary string
+    var bs = r.toString(2);
+
+    // pad high order bits of binary rule # w/ 0s if neccessary
+    while (bs.length < 8) bs = '0' + bs;
+
+    // shift on 0 lsb
+    byte_buf <<= 1
+
+    // flip lsb to 1
+    if (parseInt(bs[7 - d], 2) === 1) byte_buf |= 1;
+
+    // when byte read or end of bits
+    if (rsbi === 7 || sbi === n - 1) {
+
+      byte_buf <<= 7 - rsbi;
+
+      vw.setUint8(sbo, byte_buf);
+
+      byte_buf *= 0;
+
+    }
 
   }
 
-  ctx.goto(0, tn);
-  
+  return buf;
+
+}
+
+module.exports = function (w, h, r, rand, callback) {
+
+  var buf = seed(w, rand);
+
+  var t = 0;
+
+  while (t < h) {
+
+    callback(buf);
+
+    buf = next_gen(buf, w, r);
+
+    t++;
+
+  }
 }
