@@ -47,7 +47,7 @@ function seed (n, rand) {
 
 }
 
-function next_gen (seed, n, r) {
+function next_gen (sbuf, n, r) {
 
   // bytes size
   var size = Math.ceil(n / 8);
@@ -59,7 +59,7 @@ function next_gen (seed, n, r) {
   var vw = new DataView(buf);
 
   // seed buffer view
-  var svw = new DataView(seed);
+  var svw = new DataView(sbuf);
 
   // next generation byte buffer
   var byte_buf = 0;
